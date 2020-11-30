@@ -2,7 +2,6 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
-#include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -10,12 +9,11 @@
 //------------------------------
 
 
-
 int main(){
 	
 	//TELA 
-    int SCREEN_W = 662;
-    int SCREEN_H = 400;
+    int SCREEN_W = 662;//LARGURA
+    int SCREEN_H = 400;//ALTURA
 
 	//FPS
 	float FPS = 100;
@@ -24,18 +22,20 @@ int main(){
 	int navex = 331;
 	int navey = 300;
 	
-	
 	// TIRO NAVE---------------------
 	int tirovel= 5;
 	int tiroy = navey;
 	int tirox = navex + 40;
 	int starttiro = 0;
 	
-	
+	//CONTADOR DE ALIENS MORTOS
+	int aux = 0;
 	
 	//ALIENS-----------------
-	float velocidadealien = 1;
+	float velocidadealien = 2;
 	
+	
+	//X DOS ALIENS 
 	int alienx = 10;
 	int alienx2 = 184;
 	int alienx3 = 358;
@@ -49,6 +49,7 @@ int main(){
 	int alienx14 = 530;
 	
 	
+	//Y DOS ALIENS
 	int alieny = 10;
 	int alieny2 = 10;
 	int alieny3 = 10;
@@ -72,9 +73,9 @@ int main(){
 	int tiroalienx3 = alienx14 + 35;
 	int tiroalieny3 = alieny14 + 10;
 
-	int aux = 0;
+
 	
-	
+	//PONTEIROS PARA CADA OBJETO
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
@@ -216,11 +217,12 @@ int main(){
 	//registra na fila os eventos de tempo: quando o tempo altera de t para t+1
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	
-	int playing = 1;
+	
 	
 	//inicia o temporizador
 	al_start_timer(timer);
 	
+	int playing = 1;
 	
 	
 	
@@ -229,40 +231,36 @@ int main(){
 			ALLEGRO_EVENT ev;	
 			//espera por um evento e o armazena na variavel de evento ev
 			al_wait_for_event(event_queue, &ev);
-			
+		
 			//se o tipo de evento for um evento do temporizador, ou seja, se o tempo passou de t para t+1
 		    if(ev.type == ALLEGRO_EVENT_TIMER) {
 				
-				
 						
 				
 				
-				
-				    
 					
-							
-				
-				
-						
 				//SISTEMA DE TIRO-----------------------	
 				//TIRO NAVE :	
 				if(starttiro){if(tiroy >=-10){tiroy -= tirovel;} if(tiroy ==-10){tiroy = navey; starttiro = 0;}}
 				
 				//TIRO ALIEN :
-				if(tiroalieny <= 400){tiroalieny += tirovelalien; if(tiroalieny == 400){tiroalieny = alieny + 10;}} 
-				if(tiroalieny2 <= 400){tiroalieny2 += tirovelalien; if(tiroalieny2 == 400){tiroalieny2 = alieny7 + 10;}} 
-				if(tiroalieny3 <= 400){tiroalieny3 += tirovelalien; if(tiroalieny3 == 400){tiroalieny3 = alieny14 + 10;}}
+				if(tiroalieny <= 400){tiroalieny += tirovelalien; if(tiroalieny == 400){tiroalieny = alieny + 10; tiroalienx = alienx + 35;}} 
+				if(tiroalieny2 <= 400){tiroalieny2 += tirovelalien; if(tiroalieny2 == 400){tiroalieny2 = alieny7 + 10;  tiroalienx2 = alienx7 + 35;}} 
+				if(tiroalieny3 <= 400){tiroalieny3 += tirovelalien; if(tiroalieny3 == 400){tiroalieny3 = alieny14 + 10; tiroalienx3 = alienx14 + 35;}}
 				 
 				  
 						
 					
 				//DRAWS-------------
 				
+				//FUNDO
 				al_draw_bitmap(imagem, 0, 0, 0);
 				
+				
+				//NAVE 
 				al_draw_bitmap(personagem, navex, navey, 0);
 				
-				
+				//ALIENS
 				al_draw_bitmap(alien, alienx, alieny, 0);
 				al_draw_bitmap(alien2, alienx2, alieny2, 0);
 				al_draw_bitmap(alien3, alienx3, alieny3, 0);
@@ -274,6 +272,8 @@ int main(){
 				al_draw_bitmap(alien12, alienx12, alieny12, 0);
 				al_draw_bitmap(alien13, alienx13, alieny13, 0);
 				al_draw_bitmap(alien14, alienx14, alieny14, 0);
+				
+				//TIROS
 				al_draw_bitmap(tiro, tirox, tiroy, 0);
 				al_draw_bitmap(tiroalien, tiroalienx, tiroalieny, 0);
 				al_draw_bitmap(tiroalien2, tiroalienx2, tiroalieny2, 0);
@@ -284,7 +284,7 @@ int main(){
 				
 				//LINHA DE ALINS 1 --------------
 				if(alienx <= SCREEN_W){
-					alienx += velocidadealien; tiroalieny == velocidadealien;
+					alienx += velocidadealien; tiroalienx += velocidadealien;
 					alienx2 += velocidadealien;
 					alienx3 += velocidadealien;
 					alienx4 += velocidadealien;
@@ -298,7 +298,7 @@ int main(){
 					
 				//LINHA DE ALINS 2 -------------	
 				if(alienx10 >= -662){
-					alienx7 -= velocidadealien; tiroalieny2 -= velocidadealien;
+					alienx7 -= velocidadealien; tiroalienx2 -= velocidadealien;
 					alienx9 -= velocidadealien;
 					alienx10 -= velocidadealien;
 				if(alienx10 == -662){
@@ -314,7 +314,7 @@ int main(){
 					alienx11 += velocidadealien;
 					alienx12 += velocidadealien;
 					alienx13 += velocidadealien;
-					alienx14 += velocidadealien; tiroalieny3 += velocidadealien;
+					alienx14 += velocidadealien; tiroalienx3 += velocidadealien;
 				if(alienx11 > SCREEN_W){
 					alienx11 = -530;
 					alienx12 = -358;
@@ -330,15 +330,21 @@ int main(){
 				//DETECTOR DE COLISÃO DA NAVE --------
 					if (navex + 86 > tiroalienx && navex < tiroalienx + 9 && navey + 9 > tiroalieny && navey < tiroalieny + 9 ){
 						al_draw_bitmap(personagemmorto, navex, navey, 0);
-						playing =0; 
+						al_rest(1.0);
+						playing =0;
+						
 			          }
 			        if (navex + 86 > tiroalienx2 && navex < tiroalienx2 + 9 && navey + 9 > tiroalieny2 && navey < tiroalieny2 + 9 ){
 						al_draw_bitmap(personagemmorto, navex, navey, 0);
+						al_rest(1.0); 
 						playing =0; 
+						
 			          }
 			        if (navex + 86 > tiroalienx3 && navex < tiroalienx3 + 9 && navey + 9 > tiroalieny3 && navey < tiroalieny3 + 9 ){
 						al_draw_bitmap(personagemmorto, navex, navey, 0);
+						al_rest(1.0); 
 						playing =0; 
+						
 			          }
 				
 				
@@ -351,6 +357,9 @@ int main(){
 			            alieny = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            tiroalienx = 700;
+			            tiroalieny = 700;
+			            aux += 1;
 			          }
 			        if (alienx2 + 87 > tirox && alienx2 < tirox + 9 && alieny2 + 9 > tiroy && alieny2 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx2, alieny2, 0);
@@ -358,6 +367,7 @@ int main(){
 			            alieny2 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx3 + 87 > tirox && alienx3 < tirox + 9 && alieny3 + 9 > tiroy && alieny3 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx3, alieny3, 0);
@@ -365,6 +375,7 @@ int main(){
 			            alieny3 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx4 + 87 > tirox && alienx4 < tirox + 9 && alieny4 + 9 > tiroy && alieny4 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx4, alieny4, 0);
@@ -372,6 +383,7 @@ int main(){
 			            alieny4 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			          if (alienx7 + 87 > tirox && alienx7 < tirox + 9 && alieny7 + 9 > tiroy && alieny7 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx7, alieny7, 0);
@@ -379,6 +391,9 @@ int main(){
 			            alieny7 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            tiroalienx2 = 700;
+			            tiroalieny2 = 700;
+			            aux += 1;
 			          }
 			        if (alienx9 + 87 > tirox && alienx9 < tirox + 9 && alieny9 + 9 > tiroy && alieny9 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx9, alieny9, 0);
@@ -386,6 +401,7 @@ int main(){
 			            alieny9 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx10 + 87 > tirox && alienx10 < tirox + 9 && alieny10 + 9 > tiroy && alieny10 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx10, alieny10, 0);
@@ -393,6 +409,7 @@ int main(){
 			            alieny10 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx11 + 87 > tirox && alienx11 < tirox + 9 && alieny11 + 9 > tiroy && alieny11 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx11, alieny11, 0);
@@ -400,6 +417,7 @@ int main(){
 			            alieny11 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx12 + 87 > tirox && alienx12 < tirox + 9 && alieny12 + 9 > tiroy && alieny12 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx12, alieny12, 0);
@@ -407,6 +425,7 @@ int main(){
 			            alieny12 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx13 + 87 > tirox && alienx13 < tirox + 9 && alieny13 + 9 > tiroy && alieny13 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx13, alieny13, 0);
@@ -414,6 +433,7 @@ int main(){
 			            alieny13 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            aux += 1;
 			          }
 			        if (alienx14 + 87 > tirox && alienx14 < tirox + 9 && alieny14 + 9 > tiroy && alieny14 < tiroy + 9 ){ 
 			            al_draw_bitmap(alienmorto, alienx14, alieny14, 0);
@@ -421,15 +441,25 @@ int main(){
 			            alieny14 = -299;
 			            tiroy = navey;
 			            starttiro = 0;
+			            tiroalienx3 = 700;
+			            tiroalieny3 =  700;
+			            aux += 1;
 			          }
 			          
-			     
+			    
+			    
+			    
+				
+				      
+			    //NAVE GANHA --------------------    
+			     if(aux == 11 ){
+						if(navey >= 200){navey -= 1;}
+						if(navey == 200){playing = 0;}
+						}
 				
 			        
 				
                 
-				
-                //-------------------------
                 
                 
 				//atualiza a tela
@@ -482,6 +512,7 @@ int main(){
      al_destroy_display(display);
      al_destroy_timer(timer);
      al_destroy_event_queue(event_queue);
+     al_destroy_font(fonte);
      
      
     return 0;	
